@@ -22,12 +22,11 @@ import {
 const JOB_SITES = [
   { id: "gojobs", label: "Ontario Public Service" },
   { id: "federal", label: "Government of Canada" },
+  { id: "jobbank", label: "Job Bank (GC)" },
   { id: "toronto", label: "City of Toronto" },
-  { id: "mississauga", label: "City of Mississauga" },
-  { id: "peel", label: "Region of Peel" },
-  { id: "oakville", label: "Town of Oakville" },
   { id: "linkedin", label: "LinkedIn Jobs" },
   { id: "indeed", label: "Indeed Canada" },
+  { id: "glassdoor", label: "Glassdoor Canada" },
 ];
 
 export default function JobsPage() {

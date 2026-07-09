@@ -41,13 +41,12 @@ const INDUSTRY_OPTIONS = [
 
 const JOB_SITE_OPTIONS = [
   { id: "gojobs", label: "Ontario Public Service (GC Jobs ON)", url: "https://www.gojobs.gov.on.ca/" },
-  { id: "mississauga", label: "City of Mississauga", url: "https://jobs.mississauga.ca/" },
   { id: "toronto", label: "City of Toronto", url: "https://jobs.toronto.ca/" },
-  { id: "peel", label: "Region of Peel", url: "https://peelregion.ca/careers/" },
   { id: "federal", label: "Government of Canada (Federal)", url: "https://emploisfp-psjobs.cfp-psc.gc.ca/" },
+  { id: "jobbank", label: "Job Bank (GC)", url: "https://www.jobbank.gc.ca/" },
   { id: "linkedin", label: "LinkedIn Jobs", url: "https://www.linkedin.com/jobs/" },
   { id: "indeed", label: "Indeed Canada", url: "https://ca.indeed.com/" },
-  { id: "oakville", label: "Town of Oakville", url: "https://tre.tbe.taleo.net/tre01/ats/careers/v2/jobSearch?act=redirectCwsV2&cws=43&org=TOWNOFOA" },
+  { id: "glassdoor", label: "Glassdoor Canada", url: "https://www.glassdoor.ca/Job/" },
 ];
 
 export default function PreferencesPage() {

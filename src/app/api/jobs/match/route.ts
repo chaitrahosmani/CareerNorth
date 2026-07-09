@@ -32,13 +32,12 @@ interface MatchResult {
 
 const JOB_SITE_MAP: Record<string, { label: string; url: string; domain: string }> = {
   gojobs: { label: "Ontario Public Service", url: "https://www.gojobs.gov.on.ca/", domain: "gojobs.gov.on.ca" },
-  mississauga: { label: "City of Mississauga", url: "https://jobs.mississauga.ca/", domain: "jobs.mississauga.ca" },
   toronto: { label: "City of Toronto", url: "https://jobs.toronto.ca/", domain: "jobs.toronto.ca" },
-  peel: { label: "Region of Peel", url: "https://peelregion.ca/careers/", domain: "peelregion.ca" },
   federal: { label: "Government of Canada", url: "https://emploisfp-psjobs.cfp-psc.gc.ca/", domain: "emploisfp-psjobs.cfp-psc.gc.ca" },
   linkedin: { label: "LinkedIn Jobs", url: "https://www.linkedin.com/jobs/", domain: "linkedin.com/jobs" },
   indeed: { label: "Indeed Canada", url: "https://ca.indeed.com/", domain: "ca.indeed.com" },
-  oakville: { label: "Town of Oakville", url: "https://tre.tbe.taleo.net/tre01/ats/careers/v2/jobSearch?act=redirectCwsV2&cws=43&org=TOWNOFOA", domain: "tre.tbe.taleo.net" },
+  glassdoor: { label: "Glassdoor Canada", url: "https://www.glassdoor.ca/Job/", domain: "glassdoor.ca" },
+  jobbank: { label: "Job Bank (GC)", url: "https://www.jobbank.gc.ca/", domain: "jobbank.gc.ca" },
 };
 
 async function searchJobsWithGemini(
