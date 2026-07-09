@@ -142,24 +142,13 @@ export default function DashboardPage() {
         {/* Coming Soon - Placeholder Widgets */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Coming Soon</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card className="opacity-75 border-dashed">
               <CardContent className="p-6 flex items-center gap-4">
                 <ClipboardList className="w-8 h-8 text-orange-600" />
                 <div>
                   <p className="font-medium">My Application Status</p>
                   <p className="text-sm text-muted-foreground">Track your job applications</p>
-                  <Badge variant="secondary" className="mt-1 text-xs">Coming Soon</Badge>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="opacity-75 border-dashed">
-              <CardContent className="p-6 flex items-center gap-4">
-                <MessageSquare className="w-8 h-8 text-teal-600" />
-                <div>
-                  <p className="font-medium">Interview Prep</p>
-                  <p className="text-sm text-muted-foreground">Practice with AI mock interviews</p>
                   <Badge variant="secondary" className="mt-1 text-xs">Coming Soon</Badge>
                 </div>
               </CardContent>
