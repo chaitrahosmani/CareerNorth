@@ -113,7 +113,7 @@ export default function DashboardPage() {
 
           <Card
             className="cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => router.push("/match")}
+            onClick={() => router.push("/jobs")}
           >
             <CardContent className="p-6 flex items-center gap-4">
               <Search className="w-8 h-8 text-blue-600" />
