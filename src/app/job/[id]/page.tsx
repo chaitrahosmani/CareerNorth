@@ -70,12 +70,15 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jobId: job.id }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setTailoredResume(data.content);
+      } else {
+        alert(data.error || "Failed to generate tailored resume");
       }
     } catch (err) {
       console.error(err);
+      alert("Failed to generate tailored resume. Please try again.");
     }
     setGeneratingResume(false);
   };
@@ -89,12 +92,15 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jobId: job.id }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setCoverLetter(data.content);
+      } else {
+        alert(data.error || "Failed to generate cover letter");
       }
     } catch (err) {
       console.error(err);
+      alert("Failed to generate cover letter. Please try again.");
     }
     setGeneratingCover(false);
   };
@@ -108,13 +114,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jobId: job.id }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setInterviewQuestions(data.questions);
         setTalkingPoints(data.talking_points);
+      } else {
+        alert(data.error || "Failed to generate interview prep");
       }
     } catch (err) {
       console.error(err);
+      alert("Failed to generate interview prep. Please try again.");
     }
     setGeneratingInterview(false);
   };
