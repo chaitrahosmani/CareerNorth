@@ -339,7 +339,7 @@ export default function MatchPage() {
                     </label>
                   </div>
                   {!useUpload && (
-                    <Select value={selectedResumeId} onValueChange={setSelectedResumeId}>
+                    <Select value={selectedResumeId} onValueChange={(val) => setSelectedResumeId(val ?? "")}>
                       <SelectTrigger className="ml-6">
                         <SelectValue placeholder="Select a resume" />
                       </SelectTrigger>
