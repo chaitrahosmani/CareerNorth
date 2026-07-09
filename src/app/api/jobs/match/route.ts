@@ -177,6 +177,86 @@ IMPORTANT: Only return real jobs you actually found from your web search. Includ
   }
 }
 
+async function fetchCustomSiteJobs(
+  customSites: {id: string; label: string; url: string}[],
+  selectedSiteIds: string[],
+  targetRoles: string[]
+): Promise<SearchedJob[]> {
+  const selectedCustom = customSites.filter((s) => selectedSiteIds.includes(s.id));
+  if (selectedCustom.length === 0) return [];
+
+  const allJobs: SearchedJob[] = [];
+  const rolesQuery = targetRoles.length > 0 ? targetRoles.join(", ") : "any role";
+
+  for (const site of selectedCustom) {
+    try {
+      const response = await fetch(site.url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+      });
+      if (!response.ok) continue;
+
+      const html = await response.text();
+      const pageText = html
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 15000);
+
+      if (pageText.length < 50) continue;
+
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const prompt = `Extract job postings from this career page content. The company is "${site.label}" and the page URL is ${site.url}.
+
+I'm looking for roles matching: ${rolesQuery}
+
+PAGE CONTENT:
+${pageText}
+
+Extract ALL job postings that match or are related to the target roles. For each job found, provide:
+- title: exact job title
+- company: "${site.label}"
+- location: city/location listed
+- salary_min: number or null
+- salary_max: number or null  
+- salary_currency: "CAD"
+- job_url: the apply link if found, otherwise "${site.url}"
+- job_description: brief 2-3 sentence description
+- required_skills: array of skills mentioned
+- remote_type: "remote" | "hybrid" | "onsite"
+- posted_date: date if found, otherwise "${new Date().toISOString().split("T")[0]}"
+
+Return a JSON array. If no matching jobs found, return []. Return ONLY the JSON array.`;
+
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (jsonMatch) {
+        const jobs: SearchedJob[] = JSON.parse(jsonMatch[0]);
+        allJobs.push(...jobs.map((job) => ({
+          ...job,
+          company: job.company || site.label,
+          job_url: job.job_url || site.url,
+          salary_currency: job.salary_currency || "CAD",
+          remote_type: job.remote_type || "hybrid",
+          posted_date: job.posted_date || new Date().toISOString().split("T")[0],
+          required_skills: job.required_skills || [],
+          salary_min: job.salary_min ?? null,
+          salary_max: job.salary_max ?? null,
+        })));
+      }
+    } catch (err) {
+      console.error(`Error fetching custom site ${site.label}:`, err);
+    }
+  }
+
+  return allJobs;
+}
+
 async function matchJobWithResume(
   job: SearchedJob,
   resumeData: { skills: string[]; experience: { title: string; company: string; years: number; description: string }[] },
@@ -344,16 +424,32 @@ export async function POST(request: Request) {
       : (preferences?.target_roles || []);
     const jobSites = requestedSites.length > 0 ? requestedSites : (preferences?.job_sites || []);
     const customSites = requestedCustomSites.length > 0 ? requestedCustomSites : (preferences?.custom_job_sites || []);
-    const jobs = await searchJobsWithGemini(
-      targetRoles,
-      "Canada",
-      userPrefs.remote_preference,
-      uniqueSkills.slice(0, 8),
-      jobSites,
-      postedOn,
-      userPrefs.target_industries,
-      customSites
-    );
+
+    // Search Google-indexed sites via Gemini grounding
+    const [googleJobs, customSiteJobs] = await Promise.all([
+      searchJobsWithGemini(
+        targetRoles,
+        "Canada",
+        userPrefs.remote_preference,
+        uniqueSkills.slice(0, 8),
+        jobSites,
+        postedOn,
+        userPrefs.target_industries,
+        customSites
+      ),
+      // Directly fetch and parse custom site URLs
+      fetchCustomSiteJobs(customSites, jobSites, targetRoles),
+    ]);
+
+    // Merge results, avoiding duplicates by title+company
+    const seenKeys = new Set(googleJobs.map((j) => `${j.title.toLowerCase()}|${j.company.toLowerCase()}`));
+    const uniqueCustomJobs = customSiteJobs.filter((j) => {
+      const key = `${j.title.toLowerCase()}|${j.company.toLowerCase()}`;
+      if (seenKeys.has(key)) return false;
+      seenKeys.add(key);
+      return true;
+    });
+    const jobs = [...googleJobs, ...uniqueCustomJobs];
 
     if (jobs.length === 0) {
       return NextResponse.json({ error: "No jobs found. Try broadening your preferences." }, { status: 404 });
