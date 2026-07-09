@@ -72,11 +72,15 @@ export default function JobsPage() {
         if (prefs.target_roles?.length > 0) {
           setJobRole(prefs.target_roles.join(", "));
         }
-        if (prefs.job_sites?.length > 0) {
-          setSelectedSites(prefs.job_sites);
-        }
+        const savedSites = prefs.job_sites || [];
         if (prefs.custom_job_sites?.length > 0) {
           setCustomSites(prefs.custom_job_sites);
+          // Ensure custom site IDs are included in selectedSites
+          const customIds = prefs.custom_job_sites.map((s: {id: string}) => s.id);
+          const mergedSites = [...new Set([...savedSites, ...customIds])];
+          setSelectedSites(mergedSites);
+        } else if (savedSites.length > 0) {
+          setSelectedSites(savedSites);
         }
       }
       fetchPreviousJobs(user.id);
