@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { callLLM, AllProvidersExhaustedError } from "@/lib/llm";
 
+export const maxDuration = 60;
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 interface SearchedJob {
@@ -429,8 +431,11 @@ export async function POST(request: Request) {
     const jobSites = requestedSites.length > 0 ? requestedSites : (preferences?.job_sites || []);
     const customSites = requestedCustomSites.length > 0 ? requestedCustomSites : (preferences?.custom_job_sites || []);
 
-    // Search Google-indexed sites via Gemini grounding
-    const [googleJobs, customSiteJobs] = await Promise.all([
+    // Search Google-indexed sites via Gemini grounding AND directly fetch custom sites
+    let googleJobs: SearchedJob[] = [];
+    let customSiteJobs: SearchedJob[] = [];
+
+    const [googleResult, customResult] = await Promise.allSettled([
       searchJobsWithGemini(
         targetRoles,
         "Canada",
@@ -441,9 +446,16 @@ export async function POST(request: Request) {
         userPrefs.target_industries,
         customSites
       ),
-      // Directly fetch and parse custom site URLs
       fetchCustomSiteJobs(customSites, jobSites, targetRoles),
     ]);
+
+    if (googleResult.status === "fulfilled") googleJobs = googleResult.value;
+    else console.error("Google search failed:", googleResult.reason);
+
+    if (customResult.status === "fulfilled") customSiteJobs = customResult.value;
+    else console.error("Custom site fetch failed:", customResult.reason);
+
+    console.log(`Found ${googleJobs.length} Google jobs, ${customSiteJobs.length} custom site jobs`);
 
     // Merge results, avoiding duplicates by title+company
     const seenKeys = new Set(googleJobs.map((j) => `${j.title.toLowerCase()}|${j.company.toLowerCase()}`));
