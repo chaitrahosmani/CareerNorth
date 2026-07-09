@@ -297,6 +297,7 @@ export async function POST(request: Request) {
     const postedOn: string = body.posted_on || "48h";
     const requestedSites: string[] = body.job_sites || [];
     const requestedRole: string = body.job_role || "";
+    const requestedCustomSites: {id: string; label: string; url: string}[] = body.custom_sites || [];
 
     // Fetch user preferences and resumes
     const [prefsResult, resumesResult] = await Promise.all([
@@ -342,6 +343,7 @@ export async function POST(request: Request) {
       ? requestedRole.split(",").map((r: string) => r.trim()).filter(Boolean)
       : (preferences?.target_roles || []);
     const jobSites = requestedSites.length > 0 ? requestedSites : (preferences?.job_sites || []);
+    const customSites = requestedCustomSites.length > 0 ? requestedCustomSites : (preferences?.custom_job_sites || []);
     const jobs = await searchJobsWithGemini(
       targetRoles,
       "Canada",
@@ -350,7 +352,7 @@ export async function POST(request: Request) {
       jobSites,
       postedOn,
       userPrefs.target_industries,
-      preferences?.custom_job_sites || []
+      customSites
     );
 
     if (jobs.length === 0) {

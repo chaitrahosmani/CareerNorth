@@ -40,6 +40,9 @@ export default function JobsPage() {
   const [jobRole, setJobRole] = useState("");
   const [postedOn, setPostedOn] = useState("48h");
   const [selectedSites, setSelectedSites] = useState<string[]>([]);
+  const [customSites, setCustomSites] = useState<{id: string; label: string; url: string}[]>([]);
+  const [newSiteName, setNewSiteName] = useState("");
+  const [newSiteUrl, setNewSiteUrl] = useState("");
   const [hasPreferences, setHasPreferences] = useState(false);
 
   const fetchPreviousJobs = useCallback(async (uid: string) => {
@@ -62,7 +65,7 @@ export default function JobsPage() {
       // Load saved preferences for defaults
       const { data: prefs } = await supabase
         .from("user_preferences")
-        .select("target_roles, job_sites")
+        .select("target_roles, job_sites, custom_job_sites")
         .eq("user_id", user.id)
         .single();
       if (prefs) {
@@ -72,6 +75,9 @@ export default function JobsPage() {
         }
         if (prefs.job_sites?.length > 0) {
           setSelectedSites(prefs.job_sites);
+        }
+        if (prefs.custom_job_sites?.length > 0) {
+          setCustomSites(prefs.custom_job_sites);
         }
       }
       fetchPreviousJobs(user.id);
@@ -92,6 +98,7 @@ export default function JobsPage() {
           job_role: jobRole,
           job_sites: selectedSites,
           posted_on: postedOn,
+          custom_sites: customSites,
         }),
       });
 
@@ -118,6 +125,21 @@ export default function JobsPage() {
         ? prev.filter((s) => s !== siteId)
         : [...prev, siteId]
     );
+  };
+
+  const handleAddCustomSite = () => {
+    if (!newSiteName.trim() || !newSiteUrl.trim()) return;
+    const id = `custom-${Date.now()}`;
+    const newSite = { id, label: newSiteName.trim(), url: newSiteUrl.trim() };
+    setCustomSites((prev) => [...prev, newSite]);
+    setSelectedSites((prev) => [...prev, id]);
+    setNewSiteName("");
+    setNewSiteUrl("");
+  };
+
+  const handleRemoveCustomSite = (siteId: string) => {
+    setCustomSites((prev) => prev.filter((s) => s.id !== siteId));
+    setSelectedSites((prev) => prev.filter((s) => s !== siteId));
   };
 
   const getScoreColor = (score: number) => {
@@ -189,7 +211,7 @@ export default function JobsPage() {
             </div>
 
             {/* Job Sites */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label className="font-medium">Job Sites to Search</Label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {JOB_SITES.map((site) => (
@@ -202,8 +224,55 @@ export default function JobsPage() {
                   </label>
                 ))}
               </div>
+
+              {/* Custom Sites */}
+              {customSites.length > 0 && (
+                <div className="space-y-2 mt-3">
+                  <p className="text-sm font-medium text-muted-foreground">Custom Sites</p>
+                  {customSites.map((site) => (
+                    <label key={site.id} className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox
+                        checked={selectedSites.includes(site.id)}
+                        onCheckedChange={() => toggleSite(site.id)}
+                      />
+                      <span className="text-sm">{site.label}</span>
+                      <span className="text-xs text-muted-foreground">({site.url})</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCustomSite(site.id)}
+                        className="text-red-500 text-xs ml-1 hover:underline"
+                      >
+                        ✕
+                      </button>
+                    </label>
+                  ))}
+                </div>
+              )}
+
+              {/* Add Custom Site */}
+              <div className="mt-3 space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Add a custom company/job site</p>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Company name"
+                    value={newSiteName}
+                    onChange={(e) => setNewSiteName(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    placeholder="https://careers.company.com"
+                    value={newSiteUrl}
+                    onChange={(e) => setNewSiteUrl(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button variant="ghost" size="sm" onClick={handleAddCustomSite}>
+                    Add
+                  </Button>
+                </div>
+              </div>
+
               <p className="text-xs text-muted-foreground">
-                Select which job boards to search. Leave empty to use your saved preferences.
+                Select job boards or add custom company career pages. AI will search these sites for matching jobs.
               </p>
             </div>
 
