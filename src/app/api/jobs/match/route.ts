@@ -181,13 +181,18 @@ async function fetchCustomSiteJobs(
   selectedSiteIds: string[],
   targetRoles: string[]
 ): Promise<SearchedJob[]> {
-  const selectedCustom = customSites.filter((s) => selectedSiteIds.includes(s.id));
-  if (selectedCustom.length === 0) return [];
+  // Include custom sites that are either explicitly selected OR all custom sites if any custom ID is selected
+  const selectedCustom = customSites.filter((s) => 
+    selectedSiteIds.includes(s.id) || selectedSiteIds.some((id) => id.startsWith("custom-"))
+  );
+  // If no custom sites are explicitly selected but customSites exist, search all of them
+  const sitesToSearch = selectedCustom.length > 0 ? selectedCustom : customSites;
+  if (sitesToSearch.length === 0) return [];
 
   const allJobs: SearchedJob[] = [];
   const rolesQuery = targetRoles.length > 0 ? targetRoles.join(", ") : "any role";
 
-  for (const site of selectedCustom) {
+  for (const site of sitesToSearch) {
     try {
       const response = await fetch(site.url, {
         headers: {
