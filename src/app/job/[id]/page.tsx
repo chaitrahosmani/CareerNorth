@@ -41,6 +41,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [talkingPoints, setTalkingPoints] = useState<string[]>([]);
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [resumeExpanded, setResumeExpanded] = useState(true);
+  const [coverExpanded, setCoverExpanded] = useState(true);
+  const [interviewExpanded, setInterviewExpanded] = useState(true);
 
   const fetchJob = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -285,14 +288,18 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
         {tailoredResume && (
           <Card>
-            <CardHeader>
+            <CardHeader className="cursor-pointer" onClick={() => setResumeExpanded(!resumeExpanded)}>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Tailored Resume</CardTitle>
+                <div className="flex items-center gap-2">
+                  {resumeExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  <CardTitle className="text-lg">Tailored Resume</CardTitle>
+                </div>
                 <Button
                   size="sm"
                   variant="outline"
                   className="gap-1"
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     await navigator.clipboard.writeText(tailoredResume);
                     setCopied("resume");
                     setTimeout(() => setCopied(null), 2000);
@@ -302,11 +309,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
-              <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-md">
-                {tailoredResume}
-              </pre>
-            </CardContent>
+            {resumeExpanded && (
+              <CardContent>
+                <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-md">
+                  {tailoredResume}
+                </pre>
+              </CardContent>
+            )}
           </Card>
         )}
 
@@ -321,14 +330,18 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
         {coverLetter && (
           <Card>
-            <CardHeader>
+            <CardHeader className="cursor-pointer" onClick={() => setCoverExpanded(!coverExpanded)}>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Cover Letter</CardTitle>
+                <div className="flex items-center gap-2">
+                  {coverExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  <CardTitle className="text-lg">Cover Letter</CardTitle>
+                </div>
                 <Button
                   size="sm"
                   variant="outline"
                   className="gap-1"
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     await navigator.clipboard.writeText(coverLetter);
                     setCopied("cover");
                     setTimeout(() => setCopied(null), 2000);
@@ -338,11 +351,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-md">
-                {coverLetter}
-              </div>
-            </CardContent>
+            {coverExpanded && (
+              <CardContent>
+                <div className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-md">
+                  {coverLetter}
+                </div>
+              </CardContent>
+            )}
           </Card>
         )}
 
@@ -357,14 +372,29 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
         {interviewQuestions.length > 0 && (
           <Card>
-            <CardHeader>
+            <CardHeader className="cursor-pointer" onClick={() => setInterviewExpanded(!interviewExpanded)}>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Interview Preparation</CardTitle>
-                <Button size="sm" variant="outline" className="gap-1">
-                  <Download className="w-3 h-3" /> Download PDF
+                <div className="flex items-center gap-2">
+                  {interviewExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  <CardTitle className="text-lg">Interview Preparation</CardTitle>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    const text = interviewQuestions.map((q, i) => `${i + 1}. ${q.question}\nWhy: ${q.why_asked}\nAnswer: ${q.sample_answer}\nPitfalls: ${q.pitfalls.join(", ")}`).join("\n\n");
+                    await navigator.clipboard.writeText(text);
+                    setCopied("interview");
+                    setTimeout(() => setCopied(null), 2000);
+                  }}
+                >
+                  {copied === "interview" ? "Copied!" : "Copy to Clipboard"}
                 </Button>
               </div>
             </CardHeader>
+            {interviewExpanded && (
             <CardContent className="space-y-3">
               {talkingPoints.length > 0 && (
                 <div className="bg-blue-50 p-4 rounded-md mb-4">
@@ -415,6 +445,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 </div>
               ))}
             </CardContent>
+            )}
           </Card>
         )}
       </main>
