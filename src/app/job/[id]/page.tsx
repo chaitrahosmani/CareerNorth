@@ -40,7 +40,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [interviewQuestions, setInterviewQuestions] = useState<InterviewQuestion[]>([]);
   const [talkingPoints, setTalkingPoints] = useState<string[]>([]);
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
 
   const fetchJob = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -270,8 +270,17 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Tailored Resume</CardTitle>
-                <Button size="sm" variant="outline" className="gap-1">
-                  <Download className="w-3 h-3" /> Download .docx
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(tailoredResume);
+                    setCopied("resume");
+                    setTimeout(() => setCopied(null), 2000);
+                  }}
+                >
+                  {copied === "resume" ? "Copied!" : "Copy to Clipboard"}
                 </Button>
               </div>
             </CardHeader>
@@ -303,11 +312,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   className="gap-1"
                   onClick={async () => {
                     await navigator.clipboard.writeText(coverLetter);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
+                    setCopied("cover");
+                    setTimeout(() => setCopied(null), 2000);
                   }}
                 >
-                  {copied ? "Copied!" : "Copy to Clipboard"}
+                  {copied === "cover" ? "Copied!" : "Copy to Clipboard"}
                 </Button>
               </div>
             </CardHeader>
