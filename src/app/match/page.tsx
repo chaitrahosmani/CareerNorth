@@ -73,6 +73,7 @@ export default function MatchPage() {
   const supabase = createClient();
   const [resumes, setResumes] = useState<ResumeRecord[]>([]);
   const [jobUrl, setJobUrl] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [selectedResumeId, setSelectedResumeId] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [useUpload, setUseUpload] = useState(false);
@@ -139,8 +140,8 @@ export default function MatchPage() {
   };
 
   const handleFindMatch = async () => {
-    if (!jobUrl.trim()) {
-      setError("Please enter a job posting URL.");
+    if (!jobUrl.trim() && !jobDescription.trim()) {
+      setError("Please enter a job posting URL or paste the job description.");
       return;
     }
     if (!useUpload && !selectedResumeId) {
@@ -159,6 +160,9 @@ export default function MatchPage() {
     try {
       const formData = new FormData();
       formData.append("jobUrl", jobUrl.trim());
+      if (jobDescription.trim()) {
+        formData.append("jobDescription", jobDescription.trim());
+      }
 
       if (useUpload && uploadedFile) {
         formData.append("file", uploadedFile);
@@ -314,6 +318,19 @@ export default function MatchPage() {
               <p className="text-xs text-muted-foreground">
                 Paste the full URL of the job posting (LinkedIn, Indeed, company career page, etc.)
               </p>
+
+              <div className="mt-3 space-y-2">
+                <Label htmlFor="job-desc" className="text-sm font-medium text-muted-foreground">
+                  Or paste the job description (if URL doesn&apos;t work)
+                </Label>
+                <textarea
+                  id="job-desc"
+                  className="w-full min-h-[120px] p-3 border rounded-md text-sm resize-y focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Paste the full job description here if the URL can't be accessed..."
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                />
+              </div>
             </div>
 
             <Separator />

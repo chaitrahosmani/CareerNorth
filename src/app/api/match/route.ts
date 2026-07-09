@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const jobUrl = formData.get("jobUrl") as string;
+    const jobDescriptionInput = formData.get("jobDescription") as string | null;
     const file = formData.get("file") as File | null;
     const resumeId = formData.get("resumeId") as string | null;
 
@@ -45,9 +46,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No resume data available. Please upload a resume or select an existing one." }, { status: 400 });
     }
 
-    if (!jobUrl) {
-      return NextResponse.json({ error: "Job URL is required" }, { status: 400 });
+    if (!jobUrl && !jobDescriptionInput) {
+      return NextResponse.json({ error: "Job URL or job description is required" }, { status: 400 });
     }
+
+    let jobDescription = "";
+
+    // If user pasted a job description directly, use that
+    if (jobDescriptionInput && jobDescriptionInput.length > 50) {
+      jobDescription = jobDescriptionInput.slice(0, 15000);
+    } else {
+      if (!jobUrl) {
+        return NextResponse.json({ error: "Job URL is required when no job description is provided" }, { status: 400 });
+      }
 
     // Step 1: Try to fetch the page HTML directly
     let pageContent = "";
@@ -107,7 +118,6 @@ Search for this exact job posting online and SUMMARIZE (in your own words) the f
 
 IMPORTANT: Paraphrase everything. Do not reproduce the original posting word-for-word.`;
 
-    let jobDescription = "";
     try {
       const jobResult = await searchModel.generateContent(jobFetchPrompt);
       jobDescription = jobResult.response.text();
@@ -127,8 +137,10 @@ IMPORTANT: Paraphrase everything. Do not reproduce the original posting word-for
     }
 
     if (!jobDescription || jobDescription.length < 100) {
-      return NextResponse.json({ error: "Could not retrieve job posting content from the provided URL. The job site may block automated access. Try pasting a different URL (e.g., the LinkedIn or Indeed version of this posting)." }, { status: 400 });
+      return NextResponse.json({ error: "Could not retrieve job posting content from the provided URL. The job site may block automated access. Try pasting the job description directly in the text box below." }, { status: 400 });
     }
+
+    } // end of else block (URL-based fetching)
 
     // Now score the match
     const matchModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
