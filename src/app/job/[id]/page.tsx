@@ -55,6 +55,24 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       .eq("user_id", user.id)
       .single();
     if (data) setJob(data);
+
+    // Load previously generated content
+    const [tailoredRes, coverRes, interviewRes] = await Promise.all([
+      supabase.from("resumes_tailored").select("tailored_content").eq("job_id", id).eq("user_id", user.id).order("created_at", { ascending: false }).limit(1).single(),
+      supabase.from("cover_letters").select("generated_content").eq("job_id", id).eq("user_id", user.id).order("created_at", { ascending: false }).limit(1).single(),
+      supabase.from("interview_prep").select("questions, talking_points").eq("job_id", id).eq("user_id", user.id).order("created_at", { ascending: false }).limit(1).single(),
+    ]);
+    if (tailoredRes.data?.tailored_content?.text) {
+      setTailoredResume(tailoredRes.data.tailored_content.text);
+    }
+    if (coverRes.data?.generated_content) {
+      setCoverLetter(coverRes.data.generated_content);
+    }
+    if (interviewRes.data) {
+      if (interviewRes.data.questions?.length > 0) setInterviewQuestions(interviewRes.data.questions);
+      if (interviewRes.data.talking_points?.length > 0) setTalkingPoints(interviewRes.data.talking_points);
+    }
+
     setLoading(false);
   }, [supabase, id, router]);
 
