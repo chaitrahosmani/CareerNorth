@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerNorth - Future World Alliance Hackathon</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #fff; }
+.slide {
+  width: 100vw; height: 100vh; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; padding: 60px 100px;
+  page-break-after: always; position: relative; overflow: hidden;
+}
+.slide::before {
+  content: ''; position: absolute; top: -50%; right: -30%; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; text-align: center; }
+h2 { font-size: 2.8rem; font-weight: 700; margin-bottom: 30px; color: #818cf8; }
+h3 { font-size: 1.8rem; font-weight: 600; margin-bottom: 20px; color: #a5b4fc; }
+p, li { font-size: 1.4rem; line-height: 1.8; color: #e2e8f0; }
+ul { list-style: none; padding: 0; }
+ul li { padding: 10px 0; padding-left: 30px; position: relative; }
+ul li::before { content: '→'; position: absolute; left: 0; color: #818cf8; font-weight: bold; }
+.subtitle { font-size: 1.6rem; color: #94a3b8; margin-bottom: 10px; }
+.highlight { color: #818cf8; font-weight: 600; }
+.stat { font-size: 3rem; font-weight: 700; color: #818cf8; }
+.stat-label { font-size: 1.2rem; color: #94a3b8; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 30px; text-align: center; }
+.tag { display: inline-block; background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); padding: 8px 16px; border-radius: 20px; margin: 5px; font-size: 1rem; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; max-width: 1200px; }
+.logo { font-size: 4rem; font-weight: 800; background: linear-gradient(135deg, #818cf8, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.team { font-size: 1.3rem; color: #94a3b8; margin-top: 20px; }
+.slide-num { position: absolute; bottom: 30px; right: 40px; font-size: 0.9rem; color: #475569; }
+.content { max-width: 1100px; width: 100%; z-index: 1; }
+.accent-bar { width: 80px; height: 4px; background: #818cf8; margin-bottom: 30px; border-radius: 2px; }
+.impact-box { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); border-radius: 16px; padding: 40px; margin-top: 20px; }
+@media print { .slide { page-break-after: always; } }
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+  <div class="content" style="text-align: center;">
+    <div class="logo">CareerNorth</div>
+    <p style="font-size: 1.8rem; color: #94a3b8; margin-top: 20px;">AI-Powered Career Platform for Canadian Job Seekers</p>
+    <div style="margin-top: 60px;">
+      <p class="team">Chaitra Hosmani</p>
+      <p style="color: #64748b; font-size: 1.1rem; margin-top: 10px;">Future World Alliance Hackathon 2026</p>
+      <p style="color: #64748b; font-size: 1rem;">Track: Education & Career</p>
+    </div>
+  </div>
+  <span class="slide-num">1</span>
+</div>
+
+<!-- Slide 2: Problem Statement -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>The Problem</h2>
+    <div class="stats-grid">
+      <div><div class="stat">200+</div><div class="stat-label">Applications submitted per job seeker</div></div>
+      <div><div class="stat">83 days</div><div class="stat-label">Median time to first offer</div></div>
+      <div><div class="stat">72%</div><div class="stat-label">Report negative mental health impact</div></div>
+    </div>
+    <div style="margin-top: 50px;">
+      <p style="font-size: 1.5rem; text-align: center;">Only <span class="highlight">0.1%–2%</span> of applications result in interviews.</p>
+      <p style="font-size: 1.3rem; color: #94a3b8; text-align: center; margin-top: 15px;">Job seekers waste hours on poorly targeted applications and lack visibility into their competitive position.</p>
+    </div>
+  </div>
+  <span class="slide-num">2</span>
+</div>
+
+<!-- Slide 3: Solution -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>The Solution</h2>
+    <p style="font-size: 1.6rem; margin-bottom: 40px;">CareerNorth combines AI-powered job discovery, intelligent matching, and personalized application generation into a single platform.</p>
+    <ul>
+      <li>Smart resume parsing & skill extraction</li>
+      <li>Real-time job search across Canadian job boards</li>
+      <li>AI match scoring (skills, experience, salary fit)</li>
+      <li>One-click tailored resume generation</li>
+      <li>Personalized cover letter writing</li>
+      <li>Interview preparation with STAR-format answers</li>
+    </ul>
+  </div>
+  <span class="slide-num">3</span>
+</div>
+
+<!-- Slide 4: Target Users -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>Target Users</h2>
+    <div class="two-col">
+      <div>
+        <h3>Who</h3>
+        <ul>
+          <li>Career changers</li>
+          <li>Mid-career professionals (8–18 yrs)</li>
+          <li>Professionals seeking remote/hybrid roles</li>
+          <li>Early-to-mid career advancement seekers</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pain Points</h3>
+        <ul>
+          <li>3–4 hour application cycles</li>
+          <li>Applying to 50+ jobs without interviews</li>
+          <li>No visibility into match quality</li>
+          <li>Generic resumes & cover letters</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">4</span>
+</div>
+
+<!-- Slide 5: How It Works -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>How It Works</h2>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; text-align: center; margin-top: 30px;">
+      <div>
+        <div style="font-size: 2.5rem;">1</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">Set Career<br>Preferences</p>
+      </div>
+      <div>
+        <div style="font-size: 2.5rem;">2</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">Upload<br>Resume</p>
+      </div>
+      <div>
+        <div style="font-size: 2.5rem;">3</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">AI Finds &<br>Scores Jobs</p>
+      </div>
+      <div>
+        <div style="font-size: 2.5rem;">4</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">Generate<br>Applications</p>
+      </div>
+      <div>
+        <div style="font-size: 2.5rem;">5</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">Prepare for<br>Interviews</p>
+      </div>
+    </div>
+    <div style="margin-top: 50px;">
+      <p style="text-align: center; font-size: 1.3rem; color: #94a3b8;">From job search to application-ready in <span class="highlight">minutes, not hours</span></p>
+    </div>
+  </div>
+  <span class="slide-num">5</span>
+</div>
+
+<!-- Slide 6: Key Features -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>Key Features</h2>
+    <div class="two-col">
+      <div>
+        <h3>Job Discovery</h3>
+        <ul>
+          <li>Search LinkedIn, Indeed, Glassdoor, Job Bank, Ontario Public Service & more</li>
+          <li>Add custom company career pages</li>
+          <li>Direct site fetching for unlisted companies</li>
+          <li>Filter by role, time posted, job boards</li>
+        </ul>
+      </div>
+      <div>
+        <h3>AI-Powered Matching</h3>
+        <ul>
+          <li>Skill match scoring (0-100%)</li>
+          <li>Experience alignment analysis</li>
+          <li>Salary fit evaluation</li>
+          <li>Gap analysis — missing skills highlighted</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">6</span>
+</div>
+
+<!-- Slide 7: Application Generation -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>Application Generation</h2>
+    <div class="two-col">
+      <div>
+        <h3>Tailored Resume</h3>
+        <ul>
+          <li>Rewrites bullet points for each role</li>
+          <li>ATS-optimized with job keywords</li>
+          <li>Preserves work history, reframes descriptions</li>
+          <li>One-click copy to clipboard</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Cover Letter & Interview Prep</h3>
+        <ul>
+          <li>Specific, not generic — references the posting</li>
+          <li>8 role-specific interview questions</li>
+          <li>STAR-format sample answers</li>
+          <li>Pitfalls to avoid + company talking points</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">7</span>
+</div>
+
+<!-- Slide 8: Tech Stack -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>Tech Stack</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;">
+      <span class="tag">Next.js 16</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">Tailwind CSS</span>
+      <span class="tag">Supabase (Auth + DB)</span>
+      <span class="tag">Google Gemini 2.5 Flash</span>
+      <span class="tag">Groq LLM</span>
+      <span class="tag">Vercel (Deployment)</span>
+      <span class="tag">Row Level Security</span>
+      <span class="tag">GitHub Copilot</span>
+    </div>
+    <div style="margin-top: 50px;">
+      <h3 style="text-align: center;">Security</h3>
+      <ul style="max-width: 700px; margin: 0 auto;">
+        <li>Row Level Security — users see only their own data</li>
+        <li>Defense in depth — app-level + database-level isolation</li>
+        <li>Google OAuth — secure, passwordless authentication</li>
+      </ul>
+    </div>
+  </div>
+  <span class="slide-num">8</span>
+</div>
+
+<!-- Slide 9: Demo -->
+<div class="slide" style="background: linear-gradient(135deg, #1e1b4b 0%, #1a1a2e 100%);">
+  <div class="content" style="text-align: center;">
+    <h2 style="font-size: 3.5rem;">Live Demo</h2>
+    <p style="font-size: 1.5rem; color: #94a3b8; margin-top: 20px;">career-north.vercel.app</p>
+    <div style="margin-top: 50px; font-size: 1.2rem; color: #64748b;">
+      <p>Login → Set Preferences → Upload Resume → Find Jobs → Generate Applications</p>
+    </div>
+  </div>
+  <span class="slide-num">9</span>
+</div>
+
+<!-- Slide 10: Impact -->
+<div class="slide">
+  <div class="content">
+    <div class="accent-bar"></div>
+    <h2>Impact</h2>
+    <div class="impact-box">
+      <p style="font-size: 1.4rem; line-height: 2;">
+        CareerNorth reduces the time from job search to application-ready from <span class="highlight">hours to minutes</span>.
+        It levels the playing field — giving every candidate access to the same quality of career coaching
+        that was previously available only through expensive services.
+      </p>
+    </div>
+    <div class="stats-grid" style="margin-top: 40px;">
+      <div><div class="stat">10x</div><div class="stat-label">Faster application prep</div></div>
+      <div><div class="stat">100%</div><div class="stat-label">Personalized to each job</div></div>
+      <div><div class="stat">$0</div><div class="stat-label">Cost to job seekers</div></div>
+    </div>
+  </div>
+  <span class="slide-num">10</span>
+</div>
+
+<!-- Slide 11: Thank You -->
+<div class="slide" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+  <div class="content" style="text-align: center;">
+    <div class="logo" style="font-size: 3.5rem;">CareerNorth</div>
+    <p style="font-size: 2rem; color: #94a3b8; margin-top: 30px;">Thank You</p>
+    <div style="margin-top: 50px;">
+      <p style="font-size: 1.3rem; color: #e2e8f0;">Chaitra Hosmani</p>
+      <p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">Future World Alliance Hackathon 2026</p>
+      <p style="font-size: 1.1rem; color: #818cf8; margin-top: 20px;">career-north.vercel.app</p>
+    </div>
+  </div>
+  <span class="slide-num">11</span>
+</div>
+
+</body>
+</html>
