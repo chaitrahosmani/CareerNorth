@@ -40,7 +40,7 @@ const INDUSTRY_OPTIONS = [
 ];
 
 const JOB_SITE_OPTIONS = [
-  { id: "gojobs", label: "Ontario Public Service (GC Jobs ON)", url: "https://www.gojobs.gov.on.ca/" },
+  { id: "gojobs", label: "Ontario Public Service", url: "https://www.gojobs.gov.on.ca/" },
   { id: "toronto", label: "City of Toronto", url: "https://jobs.toronto.ca/" },
   { id: "federal", label: "Government of Canada (Federal)", url: "https://emploisfp-psjobs.cfp-psc.gc.ca/" },
   { id: "jobbank", label: "Job Bank (GC)", url: "https://www.jobbank.gc.ca/" },
